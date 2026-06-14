@@ -103,7 +103,7 @@ class TitleScene extends Phaser.Scene {
 
     startHitArea.on('pointerdown', () => {
       this.cameras.main.fade(600, 0, 0, 0);
-      this.time.delayedCall(600, () => this.scene.start('Battle'));
+      this.time.delayedCall(600, () => this.scene.start('Event'));
     });
 
     // コピーライト

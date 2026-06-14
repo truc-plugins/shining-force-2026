@@ -235,11 +235,10 @@ class BattleScene extends Phaser.Scene {
       this._units.push({
         id:`e${i}`, name:ep.name, cls:ep.cls||'WARRIOR', clsName:clsD.name,
         color:ep.color||clsD.color||0xcc3333, level:lvl, exp:0,
-        hp:ep.hp!==undefined?ep.hp:clsD.hp+Math.floor(g2*2.5),
-        maxHp:ep.hp!==undefined?ep.hp:clsD.hp+Math.floor(g2*2.5),
+        hp:1, maxHp:1,  // DEBUG: 敵を一撃で倒せるよう設定（テストプレイ用）
         mp:0, maxMp:0,
         atk:ep.atk!==undefined?ep.atk:clsD.atk+Math.floor(g2*0.8),
-        def:ep.def!==undefined?ep.def:clsD.def+Math.floor(g2*0.6),
+        def:0,  // DEBUG: 防御0（テストプレイ用）
         agi:ep.agi!==undefined?ep.agi:clsD.spd+Math.floor(g2*0.4),
         col:ep.x!==undefined?ep.x:ep.col,
         row:ep.y!==undefined?ep.y:ep.row,
@@ -815,8 +814,25 @@ class BattleScene extends Phaser.Scene {
       const col=Math.floor((ptr.x-OX)/TS),row=Math.floor((ptr.y-OY)/TS);
       if (row<0||row>=tiles.length||col<0||col>=tiles[0].length) return;
 
-      if (this.selected&&this.moveRange.some(c=>c.col===col&&c.row===row)) {
-        this._moveTo(this.selected,col,row); return;
+      if (this.selected) {
+        const sel = this.selected;
+        // 自分のマスをタップ → その場でコマンドメニュー（移動不要）
+        if (col===sel.col && row===sel.row) {
+          this.moveRange=[]; this._drawMoveRange();
+          this.time.delayedCall(100,()=>this._showCmdMenu(true));
+          return;
+        }
+        // 別の味方をタップ → 選択切り替え（キャンセル＆再選択）
+        const other=this._unitAt(col,row);
+        if (other && other.isPlayer && !other.acted && other.alive && other!==sel) {
+          this._deselect(); this._selectUnit(other); this._updateInfo(other); return;
+        }
+        // 移動範囲内タップ → 移動
+        if (this.moveRange.some(c=>c.col===col&&c.row===row)) {
+          this._moveTo(sel,col,row); return;
+        }
+        // それ以外 → 選択解除
+        this._deselect(); return;
       }
       const u=this._unitAt(col,row);
       if (u&&u.isPlayer&&!u.acted&&u.alive) { this._selectUnit(u); this._updateInfo(u); }
@@ -1146,7 +1162,7 @@ class BattleScene extends Phaser.Scene {
 
   _killUnit(u) {
     u.alive=false; u.acted=true;
-    if (u.sprite){u.sprite.g.destroy();u.sprite.hpG.destroy();u.sprite.lbl.destroy();u.sprite=null;}
+    if (u.sprite){u.sprite.g.destroy();u.sprite.hpG.destroy();if(u.sprite.lbl)u.sprite.lbl.destroy();u.sprite=null;}
   }
 
   _checkAllActed() { if (this._units.filter(u=>u.isPlayer&&u.alive).every(u=>u.acted)) this._endPlayerTurn(); }
@@ -1167,6 +1183,13 @@ class BattleScene extends Phaser.Scene {
     if (won) this.add.text(W/2,H/2+24,'経験値を獲得！',{
       fontSize:'16px',color:'#ffffff',fontFamily:'Hiragino Kaku Gothic ProN, sans-serif',
     }).setOrigin(0.5);
+    // ストーリーモードのブリッジ通知（3秒後）
+    this.time.delayedCall(3000, ()=>{
+      if(typeof BattleBridge!=='undefined'&&BattleBridge._onEnd){
+        this.scene.stop('Battle');
+        BattleBridge.notifyBattleEnd(won);
+      }
+    });
   }
 
   _updateInfo(u) {
