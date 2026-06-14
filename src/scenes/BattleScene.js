@@ -915,6 +915,7 @@ class BattleScene extends Phaser.Scene {
       atkDmg:dmg, defDmg:0, isCrit:false,
       isMagic:true, magicName:magic, element,
       onDone:()=>{
+        this.cameras.main.fadeIn(1200,0,0,0);
         this.phase='player';
         target.hp=Math.max(0,target.hp-dmg);
         this._drawAll();
@@ -951,7 +952,11 @@ class BattleScene extends Phaser.Scene {
       atk:{...atk}, def:{...def},
       atkDmg:result.atkDmg, defDmg:result.defDmg, isCrit:result.isCrit,
       isMagic:false, element:'NONE',
-      onDone:()=>this._applyResult(atk,def,result),
+      onDone:()=>{
+        // カットイン→マップ：ゆっくりフェードイン
+        this.cameras.main.fadeIn(1200,0,0,0);
+        this._applyResult(atk,def,result);
+      },
     });
   }
 
@@ -1068,6 +1073,7 @@ class BattleScene extends Phaser.Scene {
         atkDmg:result.atkDmg,defDmg:result.defDmg,isCrit:result.isCrit,
         isMagic:false,element:'NONE',
         onDone:()=>{
+          this.cameras.main.fadeIn(1200,0,0,0);
           this.phase='enemy';
           target.hp=Math.max(0,target.hp-result.atkDmg);
           e.hp=Math.max(0,e.hp-result.defDmg);
