@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>シャイニング・フォース2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      overflow: hidden;
+    }
+    #game-container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+    }
+    canvas {
+      display: block;
+      width: 100% !important;
+      height: auto !important;
+      image-rendering: pixelated;
+    }
+    #ui-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="ui-overlay"></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+  <script src="src/data/characters.js"></script>
+  <script src="src/data/maps.js"></script>
+  <script src="src/scenes/BootScene.js"></script>
+  <script src="src/scenes/TitleScene.js"></script>
+  <script src="src/scenes/ExploreScene.js"></script>
+  <script src="src/scenes/BattleScene.js"></script>
+  <script src="src/scenes/BattleCutinScene.js"></script>
+  <script src="src/scenes/UIScene.js"></script>
+  <script src="src/game.js"></script>
+  <script>
+    // エラーを画面に表示
+    window.onerror = function(msg, src, line, col, err) {
+      const div = document.getElementById('errdiv') || (() => {
+        const d = document.createElement('div');
+        d.id = 'errdiv';
+        d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#ff0000cc;color:#fff;font-size:13px;padding:8px;z-index:9999;white-space:pre-wrap;word-break:break-all;';
+        document.body.appendChild(d);
+        return d;
+      })();
+      div.textContent += `ERROR: ${msg}\n${src}:${line}:${col}\n\n`;
+    };
+  </script>
+</body>
+</html>

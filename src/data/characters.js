@@ -1,0 +1,198 @@
+// キャラクターデータ（60人分 — 主人公+仲間）
+const CHARACTER_CLASSES = {
+  HERO:       { name: '勇者',         move: 5, hp: 20, atk: 8,  def: 6,  spd: 8,  mp: 0,  color: 0x4488ff, magics: [] },
+  WARRIOR:    { name: '戦士',         move: 5, hp: 22, atk: 10, def: 8,  spd: 5,  mp: 0,  color: 0xcc4444, magics: [] },
+  KNIGHT:     { name: '騎士',         move: 7, hp: 20, atk: 9,  def: 7,  spd: 7,  mp: 0,  color: 0x88aacc, magics: [] },
+  MAGE:       { name: '魔道士',       move: 5, hp: 14, atk: 12, def: 3,  spd: 7,  mp: 14, color: 0xaa44cc, magics: ['ブレイズ', 'フリーズ'] },
+  HEALER:     { name: '僧侶',         move: 5, hp: 15, atk: 5,  def: 4,  spd: 6,  mp: 14, color: 0xffee44, magics: ['ヒール', 'リカバー'] },
+  ARCHER:     { name: '弓使い',       move: 5, hp: 15, atk: 9,  def: 4,  spd: 9,  mp: 0,  color: 0x44cc88, magics: [] },
+  BIRDMAN:    { name: '鳥人',         move: 7, hp: 16, atk: 8,  def: 5,  spd: 10, mp: 0,  color: 0xaaddff, magics: [] },
+  CENTAUR:    { name: 'ケンタウロス', move: 7, hp: 20, atk: 10, def: 7,  spd: 8,  mp: 0,  color: 0xcc8844, magics: [] },
+  WIZARD:     { name: '賢者',         move: 5, hp: 16, atk: 13, def: 4,  spd: 8,  mp: 18, color: 0xcc66ff, magics: ['ブレイズ', 'フリーズ', 'ボルト'] },
+  MONK:       { name: '拳僧',         move: 5, hp: 18, atk: 11, def: 6,  spd: 9,  mp: 6,  color: 0xffaa44, magics: ['エグゾーシズム'] },
+  ROGUE:      { name: '盗賊',         move: 6, hp: 14, atk: 8,  def: 4,  spd: 12, mp: 0,  color: 0x44aaaa, magics: [] },
+  BARON:      { name: '男爵',         move: 6, hp: 19, atk: 9,  def: 8,  spd: 6,  mp: 0,  color: 0xddccaa, magics: [] },
+};
+
+// 上位クラス（クラスチェンジ後）
+const PROMOTED_CLASSES = {
+  HERO:     { name: '将軍',     move: 6, hp: 5, atk: 5, def: 4, spd: 4, color: 0x66aaff },
+  WARRIOR:  { name: '剣士長',   move: 5, hp: 7, atk: 6, def: 5, spd: 3, color: 0xff6666 },
+  KNIGHT:   { name: '聖騎士',   move: 8, hp: 6, atk: 5, def: 5, spd: 4, color: 0xaaccee },
+  MAGE:     { name: '大魔導士', move: 5, hp: 4, atk: 8, def: 2, spd: 4, color: 0xcc66ff },
+  HEALER:   { name: '大司教',   move: 5, hp: 5, atk: 3, def: 3, spd: 3, color: 0xffff88 },
+  ARCHER:   { name: '射手長',   move: 6, hp: 4, atk: 6, def: 3, spd: 5, color: 0x66ffaa },
+  BIRDMAN:  { name: '天翼士',   move: 8, hp: 5, atk: 5, def: 4, spd: 6, color: 0xcceeff },
+  CENTAUR:  { name: '神馬騎士', move: 8, hp: 6, atk: 6, def: 5, spd: 5, color: 0xffaa66 },
+  WIZARD:   { name: '大賢者',   move: 5, hp: 5, atk: 9, def: 3, spd: 5, color: 0xee88ff },
+  MONK:     { name: '武聖',     move: 6, hp: 6, atk: 7, def: 4, spd: 6, color: 0xffcc66 },
+  ROGUE:    { name: '影忍',     move: 7, hp: 4, atk: 5, def: 3, spd: 8, color: 0x66cccc },
+  BARON:    { name: '伯爵',     move: 7, hp: 6, atk: 6, def: 6, spd: 4, color: 0xeeddbb },
+};
+
+// 60人のキャラクターリスト（主人公含む）
+const ALL_CHARACTERS = [
+  // 主人公
+  { id: 0, name: 'カイ',     cls: 'HERO',    level: 1, promoted: false, joinChapter: 1,
+    bio: '光の軍勢シャイニング・フォースを率いる若き英雄。古代の力を宿す剣を持つ。' },
+
+  // 第1章加入（5人）
+  { id: 1,  name: 'ライア',   cls: 'WARRIOR', level: 1, promoted: false, joinChapter: 1,
+    bio: 'カイの幼なじみ。無鉄砲だが剣の腕は確か。' },
+  { id: 2,  name: 'シリア',   cls: 'HEALER',  level: 1, promoted: false, joinChapter: 1,
+    bio: '村の神殿に仕える癒しの巫女。回復魔法に長ける。' },
+  { id: 3,  name: 'ガルド',   cls: 'WARRIOR', level: 2, promoted: false, joinChapter: 1,
+    bio: '元傭兵の壮年戦士。寡黙だが頼りになる守り手。' },
+  { id: 4,  name: 'ティア',   cls: 'ARCHER',  level: 1, promoted: false, joinChapter: 1,
+    bio: '森の民の少女。遠距離から正確な矢を放つ。' },
+  { id: 5,  name: 'ペロン',   cls: 'MAGE',    level: 1, promoted: false, joinChapter: 1,
+    bio: '魔法学院を飛び出した自称天才魔道士。' },
+
+  // 第2章加入（7人）
+  { id: 6,  name: 'ジーク',   cls: 'KNIGHT',  level: 3, promoted: false, joinChapter: 2,
+    bio: '王国騎士団の若手精鋭。槍の扱いに長ける。' },
+  { id: 7,  name: 'ナーシャ', cls: 'MAGE',    level: 3, promoted: false, joinChapter: 2,
+    bio: '氷属性を操る宮廷魔道士。クールな判断力が光る。' },
+  { id: 8,  name: 'ブレイン', cls: 'WARRIOR', level: 3, promoted: false, joinChapter: 2,
+    bio: '元王国将軍の息子。父の汚名を雪ぐために戦う。' },
+  { id: 9,  name: 'ファルコ', cls: 'BIRDMAN', level: 3, promoted: false, joinChapter: 2,
+    bio: '空を翔る鷹の民の若者。広い視野で偵察を得意とする。' },
+  { id: 10, name: 'ルナ',     cls: 'HEALER',  level: 2, promoted: false, joinChapter: 2,
+    bio: '月の神殿の巫女。回復魔法に加え光の魔法も使う。' },
+  { id: 11, name: 'ドーマ',   cls: 'MONK',    level: 3, promoted: false, joinChapter: 2,
+    bio: '修道場で鍛えた拳士。素手でドラゴンを倒したという噂。' },
+  { id: 12, name: 'クレア',   cls: 'ROGUE',   level: 2, promoted: false, joinChapter: 2,
+    bio: '謎めいた女盗賊。鍵開けや罠解除が得意。' },
+
+  // 第3章加入（7人）
+  { id: 13, name: 'ガウン',   cls: 'CENTAUR', level: 5, promoted: false, joinChapter: 3,
+    bio: '草原を駆ける半人半馬の戦士。突撃力が圧倒的。' },
+  { id: 14, name: 'リラ',     cls: 'ARCHER',  level: 4, promoted: false, joinChapter: 3,
+    bio: '双子の姉。弓と短剣の二刀流で戦う。' },
+  { id: 15, name: 'ルル',     cls: 'ARCHER',  level: 4, promoted: false, joinChapter: 3,
+    bio: '双子の妹。姉より魔法弓の技に長ける。' },
+  { id: 16, name: 'バッシュ', cls: 'WARRIOR', level: 5, promoted: false, joinChapter: 3,
+    bio: '山岳民族の族長の息子。大斧使いの豪傑。' },
+  { id: 17, name: 'セラフ',   cls: 'BIRDMAN', level: 4, promoted: false, joinChapter: 3,
+    bio: '炎を纏う鳳凰の民。攻守ともに優れた飛行戦士。' },
+  { id: 18, name: 'キリア',   cls: 'WIZARD',  level: 5, promoted: false, joinChapter: 3,
+    bio: '古代魔法の研究者。封印された魔法書を解読できる。' },
+  { id: 19, name: 'ゾック',   cls: 'BARON',   level: 4, promoted: false, joinChapter: 3,
+    bio: '陥落した王国の末裔。重装甲と反撃技で知られる。' },
+
+  // 第4章加入（7人）
+  { id: 20, name: 'エルフィ', cls: 'HEALER',  level: 6, promoted: false, joinChapter: 4,
+    bio: '精霊の森の妖精。蘇生魔法が使える稀有な存在。' },
+  { id: 21, name: 'ラウス',   cls: 'WARRIOR', level: 7, promoted: false, joinChapter: 4,
+    bio: '砂漠の傭兵団長。大剣の一撃は城壁すら砕く。' },
+  { id: 22, name: 'フィン',   cls: 'KNIGHT',  level: 6, promoted: false, joinChapter: 4,
+    bio: '海洋国家の騎士。槍と盾を使う守護戦術が得意。' },
+  { id: 23, name: 'ミリア',   cls: 'MAGE',    level: 6, promoted: false, joinChapter: 4,
+    bio: '炎の紋章を持つ魔道士。広範囲魔法を得意とする。' },
+  { id: 24, name: 'クロウ',   cls: 'ROGUE',   level: 5, promoted: false, joinChapter: 4,
+    bio: '影の組織の元エージェント。暗殺技術を正義のために使う。' },
+  { id: 25, name: 'ベルク',   cls: 'CENTAUR', level: 7, promoted: false, joinChapter: 4,
+    bio: '年老いた伝説の半人半馬。その経験は若者の追随を許さない。' },
+  { id: 26, name: 'アンナ',   cls: 'MONK',    level: 6, promoted: false, joinChapter: 4,
+    bio: '女僧侶戦士。武術と癒しの力を両立させた異色の戦士。' },
+
+  // 第5章加入（6人）
+  { id: 27, name: 'ドラカ',   cls: 'WARRIOR', level: 9, promoted: false, joinChapter: 5,
+    bio: 'ドラゴンの血を引く半竜族の戦士。炎耐性と破壊力を持つ。' },
+  { id: 28, name: 'ソラ',     cls: 'BIRDMAN', level: 8, promoted: false, joinChapter: 5,
+    bio: '嵐を呼ぶ鳥の民の長。雷魔法と飛行攻撃を併用する。' },
+  { id: 29, name: 'ヴェラ',   cls: 'WIZARD',  level: 9, promoted: false, joinChapter: 5,
+    bio: '闇と光の二属性を操る謎の魔法使い。過去を隠している。' },
+  { id: 30, name: 'リグナ',   cls: 'BARON',   level: 8, promoted: false, joinChapter: 5,
+    bio: '北方の雪原を治める城主。氷の大剣と鉄の守りが特徴。' },
+  { id: 31, name: 'ホルス',   cls: 'HEALER',  level: 8, promoted: false, joinChapter: 5,
+    bio: '砂漠の神殿の長老。古代の蘇生術と強化魔法を持つ。' },
+  { id: 32, name: 'ゲイン',   cls: 'ARCHER',  level: 8, promoted: false, joinChapter: 5,
+    bio: '元王国の密偵。毒矢と状態異常矢の達人。' },
+
+  // 第6章加入（6人）
+  { id: 33, name: 'アレス',   cls: 'WARRIOR', level: 11, promoted: false, joinChapter: 6,
+    bio: '滅んだ王国の最後の剣士。仇討ちのために一人旅をしていた。' },
+  { id: 34, name: 'ティルダ', cls: 'MAGE',    level: 10, promoted: false, joinChapter: 6,
+    bio: '時間魔法の使い手。行動順を操る特殊能力を持つ。' },
+  { id: 35, name: 'ゴルフ',   cls: 'MONK',    level: 10, promoted: false, joinChapter: 6,
+    bio: '巨人族の拳士。その一撃は城門すら壊す。' },
+  { id: 36, name: 'ニクス',   cls: 'KNIGHT',  level: 11, promoted: false, joinChapter: 6,
+    bio: '北方騎士団の副団長。氷雪の地で鍛えた守備力が高い。' },
+  { id: 37, name: 'フォルン', cls: 'CENTAUR', level: 10, promoted: false, joinChapter: 6,
+    bio: '天馬を駆る神話の戦士の末裔。空を駆ける稀有な半人半馬。' },
+  { id: 38, name: 'ルシル',   cls: 'ROGUE',   level: 9, promoted: false, joinChapter: 6,
+    bio: '盗賊ギルドのマスター。情報収集と奇襲に特化した戦い方をする。' },
+
+  // 第7章加入（6人）
+  { id: 39, name: 'エクス',   cls: 'WARRIOR', level: 14, promoted: true, joinChapter: 7,
+    bio: '伝説の剣士。既にクラスチェンジ済みの強者として参戦。' },
+  { id: 40, name: 'オラシア', cls: 'WIZARD',  level: 13, promoted: false, joinChapter: 7,
+    bio: '星の観測者。天体魔法で敵の行動を予測し操る。' },
+  { id: 41, name: 'ベアトリ', cls: 'HEALER',  level: 12, promoted: false, joinChapter: 7,
+    bio: '竜の巫女。回復と強化の複合術師。神龍との絆を持つ。' },
+  { id: 42, name: 'ゴア',     cls: 'BARON',   level: 13, promoted: false, joinChapter: 7,
+    bio: '元敵軍将軍。主君の非道を見限り、シャイニング・フォースに合流。' },
+  { id: 43, name: 'フェザ',   cls: 'BIRDMAN', level: 13, promoted: false, joinChapter: 7,
+    bio: '神話の鳥「フェニックス」の使い手。蘇生の炎を持つ。' },
+  { id: 44, name: 'ミケ',     cls: 'ARCHER',  level: 12, promoted: false, joinChapter: 7,
+    bio: '元サーカス団員。トリッキーな技と高い回避率が特徴。' },
+
+  // 第8〜10章加入（シークレット・隠しキャラ含む）（15人）
+  { id: 45, name: 'ドルン',   cls: 'WARRIOR', level: 16, promoted: true, joinChapter: 8,
+    bio: '古代戦士の末裔。眠りから覚めた不死身の剣士。' },
+  { id: 46, name: 'シルフ',   cls: 'MAGE',    level: 15, promoted: false, joinChapter: 8,
+    bio: '四大精霊の一柱。風の精霊として人の姿を取る。' },
+  { id: 47, name: 'ジン',     cls: 'MONK',    level: 16, promoted: false, joinChapter: 8,
+    bio: '修行の旅から戻った拳の達人。奥義「神拳」を使う。' },
+  { id: 48, name: 'アルファ', cls: 'KNIGHT',  level: 15, promoted: false, joinChapter: 8,
+    bio: '機械仕掛けの騎士。古代文明の技術で作られたゴーレム騎士。' },
+  { id: 49, name: 'デルタ',   cls: 'KNIGHT',  level: 15, promoted: false, joinChapter: 8,
+    bio: 'アルファの双子機。攻撃特化型の古代機械騎士。' },
+  { id: 50, name: 'ロザ',     cls: 'HEALER',  level: 14, promoted: false, joinChapter: 8,
+    bio: '薬師の娘。毒・麻痺・混乱などを即時に治す万能癒し手。' },
+  { id: 51, name: 'ノービス', cls: 'ROGUE',   level: 14, promoted: false, joinChapter: 9,
+    bio: '自称初心者の謎の少年。実は恐るべき潜在能力を持つ。' },
+  { id: 52, name: 'セラ',     cls: 'WIZARD',  level: 16, promoted: false, joinChapter: 9,
+    bio: '封印の番人。禁呪を封じる鍵と、それを使う力を持つ。' },
+  { id: 53, name: 'ガディ',   cls: 'CENTAUR', level: 17, promoted: true, joinChapter: 9,
+    bio: '半人半馬族の英雄王。既に伝説の域に達した戦士。' },
+  { id: 54, name: 'ウィン',   cls: 'BIRDMAN', level: 16, promoted: false, joinChapter: 9,
+    bio: '神鳥の化身。光の翼で味方全体を鼓舞する能力を持つ。' },
+  { id: 55, name: 'クロナ',   cls: 'MAGE',    level: 18, promoted: false, joinChapter: 10,
+    bio: '時空の裂け目から来た未来の魔道士。最終章のみ合流。' },
+  { id: 56, name: 'ゼファー', cls: 'BARON',   level: 17, promoted: false, joinChapter: 10,
+    bio: '風の剣を持つ最後の守護者。古代神殿の番人。' },
+  { id: 57, name: 'マリア',   cls: 'HEALER',  level: 17, promoted: false, joinChapter: 10,
+    bio: '伝説の聖女の転生。復活魔法と聖なる盾を持つ。' },
+  // 隠しキャラ（条件次第で加入）
+  { id: 58, name: '???',      cls: 'WARRIOR', level: 20, promoted: true, joinChapter: 99,
+    bio: '伝説の英雄の霊体。特定条件を満たすと一時的に加入する。' },
+  { id: 59, name: 'カイ（未来）', cls: 'HERO', level: 20, promoted: true, joinChapter: 99,
+    bio: '時を越えてきた未来のカイ。最強の隠しユニット。' },
+];
+
+// バトル用キャラクター状態生成
+function createCharacterState(charData) {
+  const baseCls = CHARACTER_CLASSES[charData.cls];
+  const level = charData.level;
+  const growth = level - 1;
+  return {
+    ...charData,
+    maxHp:  baseCls.hp  + Math.floor(growth * 2.5),
+    hp:     baseCls.hp  + Math.floor(growth * 2.5),
+    atk:    baseCls.atk + Math.floor(growth * 0.8),
+    def:    baseCls.def + Math.floor(growth * 0.6),
+    spd:    baseCls.spd + Math.floor(growth * 0.4),
+    move:   baseCls.move,
+    agi:    baseCls.spd + Math.floor(growth * 0.4),
+    maxMp:  (baseCls.mp || 0) + Math.floor(growth * 0.5),
+    mp:     (baseCls.mp || 0) + Math.floor(growth * 0.5),
+    exp:    0,
+    color:  baseCls.color,
+    clsName: baseCls.name,
+    magics: baseCls.magics || [],
+    alive:  true,
+    acted:  false,
+  };
+}
